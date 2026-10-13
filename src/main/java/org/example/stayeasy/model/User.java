@@ -1,7 +1,10 @@
 package org.example.stayeasy.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.processing.Pattern;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -12,16 +15,23 @@ public class User {
     private Long id = 0L;
 
     @Column(name = "name")
+    @Size(min = 2, message = "Name must be at least 2 characters long")
     private String name = "";
 
     @Column(nullable = false)
+    @NotBlank(message = "Email cannot be blank")
+    @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+            message = "Invalid email format"
+    )
     private String email = "";
 
     @Column(unique = true, nullable = false)
-    /*@Pattern(
+    @NotEmpty
+    @Pattern(
             regexp = "^\\+[1-9]\\d{1,14}$",
             message = "You have to enter the phone in international format (E.164)"
-    )*/
+    )
     private String phone = "";
 
     public User(Long id, String name, String email, String phone) {
