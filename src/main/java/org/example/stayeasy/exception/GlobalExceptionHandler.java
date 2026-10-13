@@ -1,8 +1,10 @@
 package org.example.stayeasy.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +18,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    //400 - Ogiltiga fält
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         var pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -76,6 +79,14 @@ public class GlobalExceptionHandler {
         pd.setProperty("errors", errors);
         pd.setProperty("timestamp", OffsetDateTime.now());
         return pd;
+    }
+
+    //404 - Resursen finns inte
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(ResourceNotFoundException e) {
+        return  ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
     }
 }
 

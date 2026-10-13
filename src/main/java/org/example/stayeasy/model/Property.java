@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Property {
@@ -41,6 +43,9 @@ public class Property {
     @NotNull(message = "Max guests is required")
     @Min(value = 1, message = "Max guests must be at least 1")
     private Long maxGuests;
+
+    @ManyToMany(mappedBy = "properties")
+    private List<User> users = new ArrayList<>();
 
     public Property(String title, Long id, String description, String adress, BigDecimal pricePerNight, Long hostId, Long maxGuests) {
         this.title = title;

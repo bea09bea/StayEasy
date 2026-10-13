@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -33,6 +36,18 @@ public class User {
             message = "You have to enter the phone in international format (E.164)"
     )
     private String phone = "";
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_property",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "property_id")
+    )
+    private List<Property> properties  = new ArrayList<>();
+
+    public List<Property> getProperties() {
+        return properties;
+    }
 
     public User(Long id, String name, String email, String phone) {
         this.id = id;

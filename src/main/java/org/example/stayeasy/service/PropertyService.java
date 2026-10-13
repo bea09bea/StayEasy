@@ -1,7 +1,9 @@
 package org.example.stayeasy.service;
 
 import jakarta.transaction.Transactional;
+import org.example.stayeasy.model.User;
 import org.example.stayeasy.repository.PropertyRepository;
+import org.example.stayeasy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.example.stayeasy.model.Property;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,12 @@ import java.util.List;
 public class PropertyService {
 
     private PropertyRepository propertyRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public void PropertyService(PropertyRepository propertyRepository) {
+    public void PropertyService(PropertyRepository propertyRepository,  UserRepository userRepository) {
         this.propertyRepository = propertyRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Property> findAll() {
@@ -34,5 +38,4 @@ public class PropertyService {
     public void delete(Long id) {
         propertyRepository.deleteById(id);
     }
-
 }
