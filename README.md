@@ -1,4 +1,5 @@
-# StayEasy - Accommodation booking API
+# StayEasy - Accommodation booking REST API
+Utvecklade ett airbnb inspirerat boknings API med Java och Spring Boot. Implementerade CRUD-operationer, relationsbaserad datamodellering, validering och felhantering samt bokningslogik. Använde PostgreSQL för datalagring och Swagger för dokumentation och testning.
 
 # Filstruktur
 ```
