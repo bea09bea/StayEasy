@@ -6,12 +6,12 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
-import javax.swing.text.html.parser.Entity;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Collection;
 
 //returnera HATEOAS-resurser med länkar
+@Component
 public class UserModelAssembler implements RepresentationModelAssembler<User, EntityModel<User>> {
 
     @Override
@@ -23,7 +23,7 @@ public class UserModelAssembler implements RepresentationModelAssembler<User, En
                 ).withSelfRel(),
                 linkTo(
                         methodOn(UserController.class).findAll()
-                ).withRel("All users")
+                ).withRel("users")
         );
 
         return entityModel;
@@ -35,5 +35,4 @@ public class UserModelAssembler implements RepresentationModelAssembler<User, En
                         linkTo(methodOn(UserController.class).findAll()).withSelfRel()
                 );
     }
-
 }

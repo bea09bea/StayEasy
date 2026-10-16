@@ -2,7 +2,6 @@ package org.example.stayeasy.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.example.stayeasy.exception;
 
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,11 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import java.time.OffsetDateTime;
 import java.util.Map;
 
-//Returnerar felmeddelande till användaren
-
+//hanterar fel, returnerar statuskoder och felmeddelande till användaren
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //400 - Ogiltiga fält
+    //400 - hanterar ogiltiga fält i JSON objektet
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         var pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -40,6 +39,7 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    //400 - hanterar värden som bryter mot valideringsregler
     @ExceptionHandler(ConstraintViolationException.class)
     public ProblemDetail handleConstraintViolationException(ConstraintViolationException e) {
         var pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -60,6 +60,7 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
+    //400 - hanterar ogiltiga parametrar och ID i HTTP requesten
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ProblemDetail handleHandlerMethodValidationException(HandlerMethodValidationException e) {
         var pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -81,11 +82,34 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    //404 - Resursen finns inte
+    //404 - hanterar när en user eller property inte finns
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(ResourceNotFoundException e) {
-        return  ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleNotFoundException(ResourceNotFoundException e) {
+        var pd = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+
+        pd.setTitle("Resource Not Found");
+        pd.setDetail(e.getMessage());
+
+        return pd;
+    }
+
+    //409 - hanterar konflikter med databas tex radering av kopplad data
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException e) {
+        e.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body("Database constraint violation");
+    }
+
+    //409 - hanterar när ett värde som måste vara unikt redan finns
+    @ExceptionHandler(DuplicationResourceException.class)
+    public ResponseEntity<String> handleDuplicateResource(
+            DuplicationResourceException e) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(e.getMessage());
     }
 }
